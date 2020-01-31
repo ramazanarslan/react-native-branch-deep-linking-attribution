@@ -127,6 +127,7 @@ class Branch {
       ios: () => RNBranch.openURL(url)
     })()
   }
+  getCrossPlatformId = RNBranch.getCrossPlatformId
 
   /*** Referral Methods ***/
   redeemRewards = (amount, bucket) => RNBranch.redeemRewards(amount, bucket)

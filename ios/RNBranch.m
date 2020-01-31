@@ -369,6 +369,32 @@ RCT_EXPORT_METHOD(
     [self.class.branch setRequestMetadataKey:key value:value];
 }
 
+#pragma mark getCrossPlatformId
+RCT_EXPORT_METHOD( getCrossPlatformId:(RCTPromiseResolveBlock)resolve rejecter:(__unused RCTPromiseRejectBlock)reject) {
+    NSMutableDictionary *json = [NSMutableDictionary new];
+    [RNBranch.branch crossPlatformIdDataWithCompletion:^(BranchCrossPlatformID * _Nullable cpid) {
+        if (cpid) {
+            // Convert the ObjC object back into JSON.  Should have kept the raw JSON response.
+            [json setObject:cpid.developerID forKey:@"developer_identity"];
+            [json setObject:cpid.crossPlatformID forKey:@"cross_platform_id"];
+            [json setObject:cpid.pastCrossPlatformIDs forKey:@"past_cross_platform_ids"];
+
+            NSMutableArray *probCPIDs = [NSMutableArray new];
+            for (BranchProbabilisticCrossPlatformID *tmp in cpid.probabiliticCrossPlatformIDs) {
+                if (tmp.crossPlatformID && tmp.score) {
+                    NSMutableDictionary *pair = [NSMutableDictionary new];
+                    [pair setObject:tmp.crossPlatformID forKey:@"id"];
+                    [pair setObject:tmp.score forKey:@"probability"];
+                    [probCPIDs addObject:pair];
+                }
+            }
+            [json setObject:probCPIDs forKey:@"prob_cross_platform_ids"];
+
+        }
+        resolve(json);
+    }];
+}
+
 #pragma mark logout
 RCT_EXPORT_METHOD(
                   logout

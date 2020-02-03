@@ -129,18 +129,24 @@ public class RNBranchModule extends ReactContextBaseJavaModule {
             @Override
             public void onInitFinished(JSONObject referringParams, BranchError error) {
 
+
                 Log.d(REACT_CLASS, "onInitFinished");
                 JSONObject result = new JSONObject();
                 Uri referringUri = null;
+                if (referringParams != null) {
                 try{
-                    boolean clickedBranchLink = false;
-                    // getXXX throws. It's OK for these to be missing.
-                    try {
-                        clickedBranchLink = referringParams.getBoolean("+clicked_branch_link");
-                    }
-                    catch (JSONException e) {
+                 
+                        boolean clickedBranchLink = false;
+                        // getXXX throws. It's OK for these to be missing.
+                    
 
-                    }
+                        try {
+                            clickedBranchLink = referringParams.getBoolean("+clicked_branch_link");
+                        }
+                        catch (JSONException e) {
+
+                        }
+                    
 
                     String referringLink = null;
                     if (clickedBranchLink) {
@@ -169,7 +175,7 @@ public class RNBranchModule extends ReactContextBaseJavaModule {
                     try {
                         result.put("error", "Failed to convert result to JSONObject: " + ex.getMessage());
                     } catch(JSONException k) {}
-                }
+                }}
                 initSessionResult = result;
 
                 BranchUniversalObject branchUniversalObject =  BranchUniversalObject.getReferredBranchUniversalObject();
